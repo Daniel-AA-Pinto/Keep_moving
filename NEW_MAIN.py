@@ -230,7 +230,8 @@ while run:
 						menu_state = "main"
 	
 			if event.key == pygame.K_UP:
-				jump2 = True
+				if AI == False:
+					jump2 = True
 
 		if event.type == pygame.KEYUP:
 			if event.key == pygame.K_w:
@@ -341,7 +342,7 @@ while run:
 				enemy_time_1 -= 0.5
 
 			if counter_player_1 % 5 == 0:
-				score_player_1 += 2
+				score_player_1 += 1
 
 			""" if score and score % 100 == 0:
 				checkpoint_fx.play() """
