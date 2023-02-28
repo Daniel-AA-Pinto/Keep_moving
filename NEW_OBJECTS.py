@@ -21,10 +21,10 @@ class Ground():
 		self.x1 -= speed
 		self.x2 -= speed
 		
-		if self.x1 <= -self.width_ground:
+		if self.x1 < -self.width_ground:
 			self.x1 = self.width_ground
 
-		if self.x2 <= -self.width_ground:
+		if self.x2 < -self.width_ground:
 			self.x2 = self.width_ground
 
 	def draw(self, screen):

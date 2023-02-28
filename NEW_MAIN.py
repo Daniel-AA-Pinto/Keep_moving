@@ -129,7 +129,7 @@ def reset():
 
 	global counter_player_1,counter_player_2, speed_player_1, speed_player_2, score_player_1, score_player_2, \
 		high_score_player_1, high_score_player_2, high_score_geral, scroll_player_1, scroll_player_2, \
-		enemy_time_1, enemy_time2
+		enemy_time_1, enemy_time_2
 
 	if score_player_1 and score_player_1 >= high_score_player_1 :
 		high_score_player_1 = score_player_1
@@ -147,7 +147,7 @@ def reset():
 	counter_player_2 = 0
 	
 	enemy_time_1 = 100
-	enemy_time2 = 100
+	enemy_time_2 = 100
 
 	speed_player_1 = 5
 	speed_player_2 = 5
@@ -186,7 +186,7 @@ float_to_int=0
 counter_player_1 = 0
 counter_player_2 = 0
 enemy_time_1 = 100
-enemy_time2 = 100
+enemy_time_2 = 100
 speed_player_1 = 5
 speed_player_2 = 5
 jump1 = False
@@ -201,6 +201,8 @@ mouse_cliked = False
 scroll_player_1 = 0
 scroll_player_2 = 0
 bg_tiles = math.ceil(WIDTH  / bg_width) + 1
+dificulty = 0
+
 
 
 # Game Variables  ************************************************************
@@ -306,16 +308,19 @@ while run:
 		if menu_state == "options":
 			if easy_button.draw(screen) and not mouse_cliked:
 				reset()
+				dificulty = 1
 				start_page = False
 				game_paused = False
 				mouse_cliked = True
 			if medium_button.draw(screen) and not mouse_cliked:
 				reset()
+				dificulty = 2
 				start_page = False
 				game_paused= False
 				mouse_cliked = True
 			if hard_button.draw(screen) and not mouse_cliked:
 				reset()
+				dificulty = 3
 				start_page = False
 				game_paused = False
 				mouse_cliked = True
@@ -351,8 +356,17 @@ while run:
 					obstacles_1_group.add(obstacles_1)
 
 			if counter_player_1 % 100 == 0:
-				speed_player_1 += 0.4
-				enemy_time_1 -= 0.5
+				match dificulty:
+					case 1:
+						speed_player_1 += 0.5
+						enemy_time_1 -= 0.5
+					case 2:
+						speed_player_1 += 0.4 * 1.25
+						enemy_time_1 -= 0.5 * 1.25
+					case 3:
+						speed_player_1 += 0.4 * 1.50
+						enemy_time_1 -= 0.5 * 1.50
+
 
 			if counter_player_1 % 5 == 0:
 				score_player_1 += 1
@@ -369,14 +383,22 @@ while run:
 		#####	PLAYER 2	##### 
 		if rabbit_2.alive :
 			counter_player_2 += 1
-			if counter_player_2 % int(enemy_time2) == 0:
+			if counter_player_2 % int(enemy_time_2) == 0:
 					type = random.randint(0, 4)
 					obstacles2 = Obstacles(type)
 					obstacles2_group.add(obstacles2)
 
 			if counter_player_2 % 100 == 0:
-				speed_player_2 += 0.4
-				enemy_time2 -= 0.5
+				match dificulty:	
+					case 1:
+						speed_player_2 += 0.5
+						enemy_time_2 -= 0.5
+					case 2:
+						speed_player_2 += 0.4 * 1.25
+						enemy_time_2 -= 0.5 * 1.25
+					case 3:
+						speed_player_2 += 0.4 * 1.50
+						enemy_time_2 -= 0.5 * 1.50
 
 			if counter_player_2 % 5 == 0:
 				score_player_2 += 1
@@ -386,21 +408,61 @@ while run:
 
 			# INICIO DA AI	___________________________________________________	
 			for obstacles2 in obstacles2_group:
-				if AI:
-					dx = obstacles2.rect.x - rabbit_2.rect.x
-					fudge = (int(60+(counter_player_1/30)))
-					if fudge >= 230:
-						fudge = (int(65+(counter_player_1/25)))
-					if fudge >= 330:
-						fudge = (int(70+(counter_player_1/20)))
-					if fudge >= 420:		
-						fudge = (int((counter_player_1/30)))
-					if counter_player_1 >= 11000 and counter_player_1 <= 13499:
-						fudge = (int((counter_player_1/25)))
-					if counter_player_1 >= 13500: #and counter1 <= 13999:
-						fudge = (1200)
-					if dx <= (fudge):
-						jump2 = True
+				match dificulty:
+					# dificulty: easy
+					case 1:	
+						if AI:
+							dx = obstacles2.rect.x - rabbit_2.rect.x
+							fudge = (int(60+(counter_player_1/30)))
+							if fudge >= 230:
+								fudge = (int(65+(counter_player_1/25)))
+							if fudge >= 330:
+								fudge = (int(70+(counter_player_1/20)))
+							if fudge >= 420:		
+								fudge = (int((counter_player_1/30)))
+							if counter_player_1 >= 11000 and counter_player_1 <= 13499:
+								fudge = (int((counter_player_1/25)))
+							if counter_player_1 >= 13500: #and counter1 <= 13999:
+								fudge = (1200)
+							if dx <= (fudge):
+								jump2 = True
+
+					# dificulty: medium
+					case 2:	
+						if AI:
+							dx = obstacles2.rect.x - rabbit_2.rect.x
+							fudge = (int(60+(counter_player_1/30)))
+							if fudge >= 230:
+								fudge = (int(65+(counter_player_1/25)))
+							if fudge >= 330:
+								fudge = (int(70+(counter_player_1/20)))
+							if fudge >= 420:		
+								fudge = (int((counter_player_1/30)))
+							if counter_player_1 >= 11000 and counter_player_1 <= 13499:
+								fudge = (int((counter_player_1/25)))
+							if counter_player_1 >= 13500: #and counter1 <= 13999:
+								fudge = (1200)
+							if dx <= (fudge):
+								jump2 = True
+					
+					# dificulty: hard
+					case 3:	
+						if AI:
+							dx = obstacles2.rect.x - rabbit_2.rect.x
+							fudge = (int(60+(counter_player_1/30)))
+							if fudge >= 230:
+								fudge = (int(65+(counter_player_1/25)))
+							if fudge >= 330:
+								fudge = (int(70+(counter_player_1/20)))
+							if fudge >= 420:		
+								fudge = (int((counter_player_1/30)))
+							if counter_player_1 >= 11000 and counter_player_1 <= 13499:
+								fudge = (int((counter_player_1/25)))
+							if counter_player_1 >= 13500: #and counter1 <= 13999:
+								fudge = (1200)
+							if dx <= (fudge):
+								jump2 = True
+													
 			# FIM DA AI	__________________________________________________________		
 
 				if pygame.sprite.collide_mask(rabbit_2, obstacles2):
