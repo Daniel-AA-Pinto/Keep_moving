@@ -1,5 +1,3 @@
-#Teste de edição
-
 import random
 import pygame
 import math
@@ -14,6 +12,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.DOUBLEBUF)
 pygame.display.set_caption("KEEP Moving")
 
 clock = pygame.time.Clock()
+#velocidade fo jogo
 FPS = 60
 
 
@@ -166,9 +165,14 @@ def reset():
 	rabbit_2.reset()
 
 
+
+
 # AI *************************************************************************
 
 AI = True
+
+
+# para testes, apagar depois
 
 
 # VARIABLES ******************************************************************
@@ -230,6 +234,10 @@ while run:
 				if start_page == True:
 					if menu_state == "options":
 						menu_state = "main"
+			
+			if event.key == pygame.K_l:
+				AI = False
+			
 	
 			if event.key == pygame.K_UP:
 				if AI == False:
@@ -238,6 +246,9 @@ while run:
 		if event.type == pygame.KEYUP:
 			if event.key == pygame.K_w:
 				jump1 = False
+
+			if event.key == pygame.K_l:
+				AI = True
 
 			if event.key == pygame.K_UP:
 				jump2 = False
@@ -460,6 +471,7 @@ while run:
 		if not rabbit_1.alive and not rabbit_2.alive:
 			if replay_button.draw(screen) and not mouse_cliked:
 				reset()
+				
 
 	elif one_player == True:
 
