@@ -1,3 +1,5 @@
+#Teste de edição
+
 import random
 import pygame
 import math
