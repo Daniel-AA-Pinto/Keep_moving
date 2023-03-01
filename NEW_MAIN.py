@@ -1,8 +1,7 @@
 import random
 import pygame
-import math
 
-from NEW_OBJECTS import Ground, Rabbit, Obstacles, Button
+from NEW_OBJECTS import Ground, Rabbit, Obstacles, Button, Background
 
 pygame.init()
 WIDTH, HEIGHT = (1200, 400)
@@ -32,15 +31,14 @@ display_2 = screen.subsurface(player2_camera)
 WHITE = (225,225,225)
 
 
-# IMAGES *********************************************************************
+# IMAGES *************************************k*******************************
 
 # intro_background
 intro_bg = pygame.image.load("Assets/Background/start_background.png").convert()
 
-# main background
-bg = pygame.image.load("Assets/Background/background.png").convert()
-bg_width = bg.get_width()
-bg_single = pygame.transform.scale(bg, (3600,400))
+
+# pause_background
+pause_bg = pygame.image.load("Assets/Background/bg_transparent_50.png").convert_alpha()
 
 # load Rabbit INTRO images
 rabbit_INTRO_list = []
@@ -110,11 +108,15 @@ checkpoint_fx = pygame.mixer.Sound('Assets/Sounds/checkPoint.wav')
 
 # OBJECTS & GROUPS ***********************************************************
 
+background_one_player = Background(3,2)
+background_player_1 = Background(2,1)
+background_player_2 = Background(2,1)
+
 ground_one_player = Ground(350)
 ground_player_1 = Ground(150)
 ground_player_2 = Ground(150)
 
-rabbit_one_player = Rabbit(50, 350)
+rabbit_one_player = Rabbit(50, 360)
 rabbit_1 = Rabbit(50, 160)
 rabbit_2 = Rabbit(50, 160)
 
@@ -155,8 +157,8 @@ def reset():
 	score_player_1 = 0
 	score_player_2 = 0
 	
-	scroll_player_1
-	scroll_player_2
+	scroll_player_1 = 0
+	scroll_player_2 = 0
 
 	obstacles_1_group.empty()
 	obstacles2_group.empty()
@@ -181,7 +183,7 @@ AI = True
 rabbit_start_value = 0
 
 #variavel criada para abrandar a animação do coelho usa o valor inteiro de incrementos de 0.2 (sobe de 5 em 5 vezes) 
-float_to_int=0
+float_to_int = 0
 
 counter_player_1 = 0
 counter_player_2 = 0
@@ -200,7 +202,6 @@ mouse_pos = (-1, -1)
 mouse_cliked = False
 scroll_player_1 = 0
 scroll_player_2 = 0
-bg_tiles = math.ceil(WIDTH  / bg_width) + 1
 dificulty = 0
 
 
@@ -208,14 +209,13 @@ dificulty = 0
 # Game Variables  ************************************************************
 
 one_player = False
-
 start_page = True
 game_paused = False
 menu_state = "main"
 run = True
 
 
-# Game  ****************************************************************** 
+# Game  ********************************************************************
 
 while run:
 	jump1 = False
@@ -263,7 +263,8 @@ while run:
 			mouse_cliked = False
 
 		
-	# First screen _________________________________________________________
+	# First screen __________________________________________________________
+
 	if start_page:
 		screen.blit(intro_bg, (0,0))
 
@@ -329,6 +330,7 @@ while run:
 	# Menu from PAUSE screen_________________________________________________
 
 	elif game_paused == True:
+		screen.blit(pause_bg, (0,0))
 		#screen.fill(WHITE)
 
 		if resume_button.draw(screen) and not mouse_cliked:
@@ -343,7 +345,7 @@ while run:
 			mouse_cliked = True
 		
 
-	# GAME IS RUNNING __________________________________________________
+	# GAME IS RUNNING ________________________________________________________
 
 	elif one_player == False:
 
@@ -352,7 +354,7 @@ while run:
 			counter_player_1 += 1
 			if counter_player_1 % int(enemy_time_1) == 0:
 					type = random.randint(0, 4)
-					obstacles_1 = Obstacles(type)
+					obstacles_1 = Obstacles(type, 165)
 					obstacles_1_group.add(obstacles_1)
 
 			if counter_player_1 % 100 == 0:
@@ -385,7 +387,7 @@ while run:
 			counter_player_2 += 1
 			if counter_player_2 % int(enemy_time_2) == 0:
 					type = random.randint(0, 4)
-					obstacles2 = Obstacles(type)
+					obstacles2 = Obstacles(type, 165)
 					obstacles2_group.add(obstacles2)
 
 			if counter_player_2 % 100 == 0:
@@ -413,17 +415,9 @@ while run:
 					case 1:	
 						if AI:
 							dx = obstacles2.rect.x - rabbit_2.rect.x
-							fudge = (int(60+(counter_player_1/30)))
-							if fudge >= 230:
-								fudge = (int(65+(counter_player_1/25)))
-							if fudge >= 330:
-								fudge = (int(70+(counter_player_1/20)))
-							if fudge >= 420:		
-								fudge = (int((counter_player_1/30)))
-							if counter_player_1 >= 11000 and counter_player_1 <= 13499:
-								fudge = (int((counter_player_1/25)))
-							if counter_player_1 >= 13500: #and counter1 <= 13999:
-								fudge = (1200)
+							fudge = (int(60+(counter_player_2/20)))
+							if fudge >= 160:
+								fudge = random.uniform(10, 130)
 							if dx <= (fudge):
 								jump2 = True
 
@@ -470,22 +464,14 @@ while run:
 					rabbit_2.alive = False
 					die_fx.play()
 
-
-		#####	DRAW BACKGROUND IMAGE	##### 
-		for i in range(0, bg_tiles):
-			display_1.blit(bg, (i * bg_width + scroll_player_1,0))
-			display_2.blit(bg, (i * bg_width + scroll_player_2,0))
-		scroll_player_1 -= speed_player_1/10
-		scroll_player_2 -= speed_player_2/20
-
-		# update scroll
-		if abs(scroll_player_1) > (bg_width):
-			scroll_player_1 = 0
-		if abs(scroll_player_2) > (bg_width):
-			scroll_player_2 = 0
 		
 
 		#####	DRAW GROUND, Rabbits and Obstacles in gameplay	##### 
+		
+		background_player_1.update(speed_player_1)
+		background_player_2.update(speed_player_2)
+		background_player_1.draw(display_1)
+		background_player_2.draw(display_2)
 		ground_player_1.update(speed_player_1)
 		ground_player_2.update(speed_player_2)
 		ground_player_1.draw(display_1)
@@ -498,6 +484,7 @@ while run:
 		rabbit_2.update(jump2)
 		rabbit_1.draw(display_1)
 		rabbit_2.draw(display_2)
+		
 
 
 		string_score_player_1 = str(score_player_1).zfill(5)
@@ -536,13 +523,14 @@ while run:
 				
 
 	elif one_player == True:
+		rabbit_1 = rabbit_one_player
 
 		#####	PLAYER 1	##### 
 		if rabbit_1.alive :
 			counter_player_1 += 1
 			if counter_player_1 % int(enemy_time_1) == 0:
 					type = random.randint(0, 4)
-					obstacles_1 = Obstacles(type)
+					obstacles_1 = Obstacles(type, 365)
 					obstacles_1_group.add(obstacles_1)
 
 			if counter_player_1 % 100 == 0:
@@ -562,17 +550,10 @@ while run:
 					die_fx.play()
 
 
-		#####	DRAW BACKGROUND IMAGE	##### 
-		for i in range(0, bg_tiles):
-			screen.blit(bg_single, (i * bg_width + scroll_player_1,0))
-		scroll_player_1 -= speed_player_1/6
-
-		# update scroll
-		if abs(scroll_player_1) > (bg_width):
-			scroll_player_1 = 0
-
-
 		#####	DRAW GROUND, Rabbits and Obstacles in gameplay	##### 
+
+		background_one_player.update(speed_player_1)
+		background_one_player.draw(screen)
 		ground_one_player.update(speed_player_1)
 		ground_one_player.draw(screen)
 		obstacles_1_group.update(speed_player_1, rabbit_1)
@@ -591,11 +572,6 @@ while run:
 			for i, num in enumerate(string_score_player_1):
 				display_1.blit(numbers_img, (455+11*i, 10), (10*int(num), 0, 10, 12))
 		
-		if high_score_geral:
-			screen.blit(numbers_img, (1105, 10), (100, 0, 20, 12))
-			string_score_player_2 = f'{high_score_player_2}'.zfill(5)
-			for i, num in enumerate(string_score_player_2):
-				screen.blit(numbers_img, (1135+11*i, 10), (10*int(num), 0, 10, 12))
 
 		if not rabbit_1.alive:
 			display_1.blit(game_over_img, (WIDTH//2-100, 50))

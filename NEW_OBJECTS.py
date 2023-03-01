@@ -1,38 +1,50 @@
 import pygame
+import math
 
-SCREEN = WIDTH, HEIGHT = (1200, 200)
+SCREEN = WIDTH, HEIGHT = (1200, 400)
+
+class Background():
+	
+	def __init__(self, x, y):
+
+		# GROUND	
+		self.x = x
+		self.y = y
+		self.image = pygame.image.load("Assets/Background/background.png").convert()
+		self.image = pygame.transform.scale(self.image, (WIDTH*self.x,(HEIGHT/2)*self.y))
+		self.scroll = 0
+		self.width_ground = self.image.get_width()
+		self.g_tiles = math.ceil(WIDTH  / self.width_ground) + 1
+ 
+	def update(self, speed):
+		self.scroll -= speed/10	
+	
+	def draw(self, screen):
+		for i in range(0, self.g_tiles):
+			screen.blit(self.image, (i * self.width_ground + self.scroll,0))
+		if abs(self.scroll) > self.width_ground:
+			self.scroll = 0
 
 class Ground():
 	
 	def __init__(self, y):
 
 		# GROUND
-		self.image = pygame.image.load('Assets/Background/ground.png')
-		self.rect = self.image.get_rect()
-
-		self.width_ground = self.image.get_width()
-		self.x1 = 0
-		self.x2 = self.width_ground
+		self.image = pygame.image.load('Assets/Background/block-big.png')
 		self.y = y
+		self.scroll = 0
+		self.width_ground = self.image.get_width()
+		self.g_tiles = math.ceil(WIDTH  / self.width_ground) + 1
  
 	def update(self, speed):
-
-		# GROUND
-		self.x1 -= speed
-		self.x2 -= speed
-		
-		if self.x1 < -self.width_ground:
-			self.x1 = self.width_ground
-
-		if self.x2 < -self.width_ground:
-			self.x2 = self.width_ground
-
+		self.scroll -= speed	
+	
 	def draw(self, screen):
-		
-		# GROUND
-		screen.blit(self.image, (self.x1, self.y))
-		screen.blit(self.image, (self.x2, self.y))
-
+		for i in range(0, self.g_tiles):
+			screen.blit(self.image, (i * self.width_ground + self.scroll,self.y))
+		if abs(self.scroll) > self.width_ground:
+			self.scroll = 0
+	
 class Button():
 	def __init__(self, x, y, image, scale):
 		width = image.get_width()
@@ -176,7 +188,7 @@ class Rabbit():
 class Obstacles(pygame.sprite.Sprite):
 
 
-	def __init__(self, type):
+	def __init__(self, type, bottom):
 		super(Obstacles, self).__init__()
 
 		self.image_list = []
@@ -190,7 +202,7 @@ class Obstacles(pygame.sprite.Sprite):
 		self.image = self.image_list[type-1]
 		self.rect = self.image.get_rect()
 		self.rect.x = WIDTH + 10
-		self.rect.bottom = 165
+		self.rect.bottom = bottom
 
 	def update(self, speed, rabbit):
 		if rabbit.alive:
