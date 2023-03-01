@@ -112,9 +112,9 @@ class Rabbit():
 		self.alive = True
 		self.counter = 0
 
-	def update(self, jump1):
+	def update(self, jump):
 		if self.alive:
-			if not self.isJumping and jump1:
+			if not self.isJumping and jump:
 				self.vel = -self.jumpHeight
 				self.isJumping = True
 
@@ -147,40 +147,6 @@ class Rabbit():
 		else:
 			self.image = self.dead_image
 
-	def update(self, jump2):
-		if self.alive:
-			if not self.isJumping and jump2:
-				self.vel = -self.jumpHeight
-				self.isJumping = True
-
-			self.vel += self.gravity
-			if self.vel >= self.jumpHeight:
-				self.vel = self.jumpHeight
-
-			self.rect.y += self.vel
-			if self.rect.bottom > self.base:
-				self.rect.bottom = self.base
-				self.isJumping = False
-
-
-			if self.isJumping:
-				self.index = 0
-				self.counter = 0
-				self.image = self.run_list[self.index]
-			else:
-				self.counter += 1
-				if self.counter >= 4:
-					self.index = (self.index + 1) % len(self.run_list)
-					self.image = self.run_list[self.index]
-					self.rect = self.image.get_rect()
-					self.rect.x = self.x
-					self.rect.bottom = self.base
-					self.counter = 0
-
-			self.mask = pygame.mask.from_surface(self.image)
-
-		else:
-			self.image = self.dead_image
 
 	def draw(self, player2_display):
 		player2_display.blit(self.image, self.rect)
