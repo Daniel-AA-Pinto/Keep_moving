@@ -165,9 +165,10 @@ def reset():
 	obstacles_1_group.empty()
 	obstacles2_group.empty()
 
+	rabbit_one_player.reset()
 	rabbit_1.reset()
 	rabbit_2.reset()
-	rabbit_one_player.reset()
+
 
 
 
@@ -292,26 +293,32 @@ while run:
 		### if state is main
 		if menu_state == "main":
 
+
 			#Single Player Button
 			if singlePlayer_button.draw(screen) and not mouse_cliked:
 				AI = False
 				one_player = True 
 				menu_state = "options"
 				mouse_cliked = True
+				
 			
 			# 2 Players Button
 			if twoPlayers_button.draw(screen) and not mouse_cliked:
+				rabbit_1 = Rabbit(50, 160)
 				AI = False
 				one_player = False
 				menu_state = "options"
 				mouse_cliked = True
 
+
 			# Player VS CPU
 			if playerVsCPU_button.draw(screen) and not mouse_cliked:
+				rabbit_1 = Rabbit(50, 160)
 				one_player = False
 				AI = True
 				menu_state = "options"
 				mouse_cliked = True
+
 
 		### if state is option (after main)
 		if menu_state == "options":
@@ -356,7 +363,6 @@ while run:
 	# GAME IS RUNNING ________________________________________________________
 
 	elif one_player == False:
-
 		if score_player_1 == 1 :
 			pygame.mixer.music.play(-1, 0.0, 5000)
 			pygame.mixer.music.set_volume(0.20)
@@ -473,11 +479,11 @@ while run:
 					rabbit_2.alive = False
 					die_fx.play()
 
-		if jump1 == True and rabbit_1.isJumping == False:
+		if jump1 == True and rabbit_1.isJumping == False and rabbit_1.alive == True:
 			jump_fx.play()
 			jump_fx.set_volume(0.2)
 	
-		if jump2 == True and rabbit_2.isJumping == False:
+		if jump2 == True and rabbit_2.isJumping == False and rabbit_2.alive == True:
 			jump_fx.play()
 			jump_fx.set_volume(0.2)
 
@@ -550,6 +556,10 @@ while run:
 	elif one_player == True:
 		rabbit_1 = rabbit_one_player
 
+		if score_player_1 == 1 :
+			pygame.mixer.music.play(-1, 0.0, 5000)
+			pygame.mixer.music.set_volume(0.20)
+
 		#####	PLAYER 1	##### 
 		if rabbit_1.alive :
 			counter_player_1 += 1
@@ -574,6 +584,9 @@ while run:
 					rabbit_1.alive = False
 					die_fx.play()
 
+		if jump1 == True and rabbit_1.isJumping == False and rabbit_1.alive == True:
+			jump_fx.play()
+			jump_fx.set_volume(0.2)
 
 		#####	DRAW GROUND, Rabbits and Obstacles in gameplay	##### 
 
