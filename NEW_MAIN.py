@@ -43,9 +43,9 @@ pause_bg = pygame.image.load("Assets/Background/bg_transparent_50.png").convert_
 # load Rabbit INTRO images
 rabbit_INTRO_list = []
 for i in range(1, 36):
-    rabbit_INTRO_img = pygame.image.load(f'Assets/bunny/v3geVY-{i} (arrastado).tiff')
-    rabbit_INTRO_img = pygame.transform.scale(rabbit_INTRO_img, (423/2,558/2))
-    rabbit_INTRO_list.append(rabbit_INTRO_img)
+	rabbit_INTRO_img = pygame.image.load(f'Assets/bunny/v3geVY-{i} (arrastado).tiff')
+	rabbit_INTRO_img = pygame.transform.scale(rabbit_INTRO_img, (423/2,558/2))
+	rabbit_INTRO_list.append(rabbit_INTRO_img)
 
 # load game over images
 game_over_img = pygame.image.load('Assets/game_over.png')
@@ -165,6 +165,7 @@ def reset():
 
 	rabbit_1.reset()
 	rabbit_2.reset()
+	rabbit_one_player.reset()
 
 
 
@@ -415,50 +416,51 @@ while run:
 					case 1:	
 						if AI:
 							dx = obstacles2.rect.x - rabbit_2.rect.x
-							fudge = (int(60+(counter_player_2/20)))
-							if fudge >= 160:
-								fudge = random.uniform(10, 130)
+							fudge = (int(70+(counter_player_2/80)))
+							if fudge >= 96: # 415 SCORE
+								ffudge = random.uniform(55, 100) #FLOAT FUDGE = FFUDGE
+								fudge = int(ffudge)
+								if score_player_2 >= 500: #TO LOSE (505 MAX SCORE)
+									fudge = 50
 							if dx <= (fudge):
 								jump2 = True
+							
+							print(fudge,'       ', 60+(counter_player_2/20),'       ',score_player_2, '       ', jump2)
+
 
 					# dificulty: medium
 					case 2:	
 						if AI:
 							dx = obstacles2.rect.x - rabbit_2.rect.x
-							fudge = (int(60+(counter_player_1/30)))
-							if fudge >= 230:
-								fudge = (int(65+(counter_player_1/25)))
-							if fudge >= 330:
-								fudge = (int(70+(counter_player_1/20)))
-							if fudge >= 420:		
-								fudge = (int((counter_player_1/30)))
-							if counter_player_1 >= 11000 and counter_player_1 <= 13499:
-								fudge = (int((counter_player_1/25)))
-							if counter_player_1 >= 13500: #and counter1 <= 13999:
-								fudge = (1200)
+							fudge = (int(60+(counter_player_2/10)))
+							if fudge >= 395: #670 SCORE
+								ffudge = random.uniform(110, 130) #FLOAT FUDGE = FFUDGE
+								fudge = int(ffudge)
+								if score_player_2 >= 760: #TO LOSE (754 MAX SCORE)
+									fudge = 100
 							if dx <= (fudge):
 								jump2 = True
+							
+							print(fudge,'       ', counter_player_2,'       ', score_player_2)
+
 					
 					# dificulty: hard
 					case 3:	
 						if AI:
 							dx = obstacles2.rect.x - rabbit_2.rect.x
-							fudge = (int(60+(counter_player_1/30)))
-							if fudge >= 230:
-								fudge = (int(65+(counter_player_1/25)))
-							if fudge >= 330:
-								fudge = (int(70+(counter_player_1/20)))
-							if fudge >= 420:		
-								fudge = (int((counter_player_1/30)))
-							if counter_player_1 >= 11000 and counter_player_1 <= 13499:
-								fudge = (int((counter_player_1/25)))
-							if counter_player_1 >= 13500: #and counter1 <= 13999:
-								fudge = (1200)
+							fudge = (int(75+(counter_player_2/20)))
+							if fudge >= 280: #820 SCORE
+								ffudge = random.uniform(130, 175) #FLOAT FUDGE ||1108 MAX SCORE (LUCKY AF)
+								fudge = int(ffudge)
 							if dx <= (fudge):
 								jump2 = True
-													
-			# FIM DA AI	__________________________________________________________		
+								
 
+
+						print(fudge,'  ', jump2,'       ', counter_player_2,'       ', score_player_2)
+
+
+			# FIM DA AI	__________________________________________________________	
 				if pygame.sprite.collide_mask(rabbit_2, obstacles2):
 					speed_player_2 = 0
 					rabbit_2.alive = False
