@@ -31,7 +31,7 @@ display_2 = screen.subsurface(player2_camera)
 WHITE = (225,225,225)
 
 
-# IMAGES *************************************k*******************************
+# IMAGES *********************************************************************
 
 # intro_background
 intro_bg = pygame.image.load("Assets/Background/start_background.png").convert()
@@ -75,6 +75,7 @@ options_img = pygame.image.load("Assets/images/button_options.png").convert_alph
 quit_img = pygame.image.load("Assets/images/button_quit.png").convert_alpha()
 
 
+
 # Create button instances *************************************************************************
 
 ### Define scale of all buttons
@@ -101,9 +102,10 @@ replay_button = Button(425.5,118,replay_img, 1)
 
 # SOUNDS *********************************************************************
 
-jump_fx = pygame.mixer.Sound('Assets/Sounds/jump.wav')
+jump_fx = pygame.mixer.Sound('Assets/Sounds/jump2.wav')
 die_fx = pygame.mixer.Sound('Assets/Sounds/die.wav')
 checkpoint_fx = pygame.mixer.Sound('Assets/Sounds/checkPoint.wav')
+pygame.mixer.music.load('Assets/Sounds/music_game.mp3')
 
 
 # OBJECTS & GROUPS ***********************************************************
@@ -222,6 +224,8 @@ while run:
 	jump1 = False
 	jump2 = False
 	
+
+	
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			run = False
@@ -229,9 +233,11 @@ while run:
 		if event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_ESCAPE or event.key == pygame.K_q:
 				game_paused = True
+				pygame.mixer.music.pause()
 
 			if event.key == pygame.K_w:
 				jump1 = True
+				
 
 			if event.key == pygame.K_BACKSPACE:
 				if start_page == True:
@@ -268,6 +274,7 @@ while run:
 
 	if start_page:
 		screen.blit(intro_bg, (0,0))
+
 
 		# DRAW Rabbit intro animation
 		if rabbit_start_value >= len(rabbit_INTRO_list):
@@ -326,8 +333,7 @@ while run:
 				start_page = False
 				game_paused = False
 				mouse_cliked = True
-			
-		
+					
 	# Menu from PAUSE screen_________________________________________________
 
 	elif game_paused == True:
@@ -337,6 +343,8 @@ while run:
 		if resume_button.draw(screen) and not mouse_cliked:
 			game_paused = False
 			mouse_cliked = True
+			pygame.mixer.music.unpause()
+
 		if options_button.draw(screen) and not mouse_cliked:
 			menu_state = "main"
 			start_page= True
@@ -345,11 +353,14 @@ while run:
 			run = False
 			mouse_cliked = True
 		
-
 	# GAME IS RUNNING ________________________________________________________
 
 	elif one_player == False:
 
+		if score_player_1 == 1 :
+			pygame.mixer.music.play(-1, 0.0, 5000)
+			pygame.mixer.music.set_volume(0.20)
+		
 		#####	PLAYER 1	##### 
 		if rabbit_1.alive :
 			counter_player_1 += 1
@@ -374,14 +385,16 @@ while run:
 			if counter_player_1 % 5 == 0:
 				score_player_1 += 1
 
-			""" if score and score % 100 == 0:
-				checkpoint_fx.play() """
+			if score_player_1 and score_player_1 % 100 == 0:
+				checkpoint_fx.play()
+				checkpoint_fx.set_volume(0.20)
 
 			for obstacles1 in obstacles_1_group:
 				if pygame.sprite.collide_mask(rabbit_1, obstacles1):
 					speed_player_1 = 0
 					rabbit_1.alive = False
 					die_fx.play()
+
 
 		#####	PLAYER 2	##### 
 		if rabbit_2.alive :
@@ -406,8 +419,9 @@ while run:
 			if counter_player_2 % 5 == 0:
 				score_player_2 += 1
 
-			""" if score and score % 100 == 0:
-				checkpoint_fx.play() """
+			if score_player_2 and score_player_2 % 100 == 0:
+				checkpoint_fx.play()
+				checkpoint_fx.set_volume(0.20)
 
 			# INICIO DA AI	___________________________________________________	
 			for obstacles2 in obstacles2_group:
@@ -425,8 +439,6 @@ while run:
 							if dx <= (fudge):
 								jump2 = True
 							
-							print(fudge,'       ', 60+(counter_player_2/20),'       ',score_player_2, '       ', jump2)
-
 
 					# dificulty: medium
 					case 2:	
@@ -441,8 +453,6 @@ while run:
 							if dx <= (fudge):
 								jump2 = True
 							
-							print(fudge,'       ', counter_player_2,'       ', score_player_2)
-
 					
 					# dificulty: hard
 					case 3:	
@@ -454,10 +464,7 @@ while run:
 								fudge = int(ffudge)
 							if dx <= (fudge):
 								jump2 = True
-								
 
-
-						print(fudge,'  ', jump2,'       ', counter_player_2,'       ', score_player_2)
 
 
 			# FIM DA AI	__________________________________________________________	
@@ -466,7 +473,15 @@ while run:
 					rabbit_2.alive = False
 					die_fx.play()
 
-		
+		if jump1 == True and rabbit_1.isJumping == False:
+			jump_fx.play()
+			jump_fx.set_volume(0.2)
+	
+		if jump2 == True and rabbit_2.isJumping == False:
+			jump_fx.play()
+			jump_fx.set_volume(0.2)
+
+
 
 		#####	DRAW GROUND, Rabbits and Obstacles in gameplay	##### 
 		
@@ -527,10 +542,11 @@ while run:
 		if not rabbit_2.alive:
 			display_2.blit(game_over_img, (WIDTH//2-100, 50))
 		if not rabbit_1.alive and not rabbit_2.alive:
+			pygame.mixer.music.stop()
 			if replay_button.draw(screen) and not mouse_cliked:
+				
 				reset()
 				
-
 	elif one_player == True:
 		rabbit_1 = rabbit_one_player
 
