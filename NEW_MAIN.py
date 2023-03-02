@@ -52,8 +52,8 @@ game_over_img = pygame.image.load('Assets/game_over.png')
 game_over_img = pygame.transform.scale(game_over_img, (200, 36))
 
 # Load replay image
-replay_img = pygame.image.load('Assets/replay.png').convert_alpha()
-replay_img = pygame.transform.scale(replay_img, (40*4, 36*4))
+replay_img = pygame.image.load('Assets/images/button_play_again.png').convert_alpha()
+#replay_img = pygame.transform.scale(replay_img, (40*4, 36*4))
 
 # load score numbers 
 numbers_img = pygame.image.load('Assets/numbers.png')
@@ -96,7 +96,7 @@ medium_button = Button((WIDTH/2 - medium_img.get_width()/2*scale), 165.6, medium
 hard_button = Button((WIDTH/2 - hard_img.get_width()/2*scale), 241.2, hard_img, scale)
 
 # replay
-replay_button = Button((WIDTH // 2 - 100),100,replay_img, 1)
+replay_button = Button(425.5,118,replay_img, 1)
 
 
 # SOUNDS *********************************************************************
@@ -489,26 +489,33 @@ while run:
 		
 
 
+		# score player 1
 		string_score_player_1 = str(score_player_1).zfill(5)
 		for i, num in enumerate(string_score_player_1):
-			display_1.blit(numbers_img, (520+11*i, 10), (10*int(num), 0, 10, 12))
+			display_1.blit(numbers_img, (625+11*i, 10), (10*int(num), 0, 10, 12))
 
+		#score player 2
 		string_score_player_2 = str(score_player_2).zfill(5)
 		for i, num in enumerate(string_score_player_2):
-			display_2.blit(numbers_img, (520+11*i, 10), (10*int(num), 0, 10, 12))
+			display_2.blit(numbers_img, (625+11*i, 10), (10*int(num), 0, 10, 12))
 
+		# print hi-score player 1
 		if high_score_player_1:
-			display_1.blit(numbers_img, (425, 10), (100, 0, 20, 12))
+			# print "HI"
+			display_1.blit(numbers_img, (520, 10), (100, 0, 20, 12))
 			string_score_player_1 = f'{high_score_player_1}'.zfill(5)
 			for i, num in enumerate(string_score_player_1):
-				display_1.blit(numbers_img, (455+11*i, 10), (10*int(num), 0, 10, 12))
+				display_1.blit(numbers_img, (545+11*i, 10), (10*int(num), 0, 10, 12))
 		
+		# print hi-score player 2
 		if high_score_player_2:
-			display_2.blit(numbers_img, (425, 10), (100, 0, 20, 12))
+			# print "HI"
+			display_2.blit(numbers_img, (520, 10), (100, 0, 20, 12))
 			string_score_player_2 = f'{high_score_player_2}'.zfill(5)
 			for i, num in enumerate(string_score_player_2):
-				display_2.blit(numbers_img, (455+11*i, 10), (10*int(num), 0, 10, 12))
+				display_2.blit(numbers_img, (545+11*i, 10), (10*int(num), 0, 10, 12))
 		
+		# print hi-score geral
 		if high_score_geral:
 			screen.blit(numbers_img, (1105, 10), (100, 0, 20, 12))
 			string_score_player_2 = f'{high_score_player_2}'.zfill(5)
